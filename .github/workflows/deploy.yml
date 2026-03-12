@@ -1,0 +1,60 @@
+name: Deploy to Supabase
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link Supabase project
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy Edge Functions
+        run: |
+          supabase functions deploy send-push-notification --no-verify-jwt
+          supabase functions deploy scheduled-reminders --no-verify-jwt
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Set Edge Function secrets
+        run: |
+          supabase secrets set \
+            APP_URL="${{ secrets.APP_URL }}" \
+            VAPID_PRIVATE_KEY="${{ secrets.VAPID_PRIVATE_KEY }}" \
+            VAPID_CONTACT_EMAIL="${{ secrets.VAPID_CONTACT_EMAIL }}"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Sync VAPID keys to Vercel
+        run: |
+          # Upsert NEXT_PUBLIC_VAPID_PUBLIC_KEY (plain, all environments)
+          curl -sf -X POST "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"key\":\"NEXT_PUBLIC_VAPID_PUBLIC_KEY\",\"value\":\"${{ secrets.VAPID_PUBLIC_KEY }}\",\"type\":\"plain\",\"target\":[\"production\",\"preview\",\"development\"]}" \
+            || true
+
+          # Upsert VAPID_PRIVATE_KEY (sensitive, production only)
+          curl -sf -X POST "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"key\":\"VAPID_PRIVATE_KEY\",\"value\":\"${{ secrets.VAPID_PRIVATE_KEY }}\",\"type\":\"sensitive\",\"target\":[\"production\"]}" \
+            || true
+
+          # Upsert VAPID_CONTACT_EMAIL (plain, production only)
+          curl -sf -X POST "https://api.vercel.com/v10/projects/${{ secrets.VERCEL_PROJECT_ID }}/env" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"key\":\"VAPID_CONTACT_EMAIL\",\"value\":\"${{ secrets.VAPID_CONTACT_EMAIL }}\",\"type\":\"plain\",\"target\":[\"production\"]}" \
+            || true
