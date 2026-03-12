@@ -2,12 +2,18 @@ import webpush from 'web-push'
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import type { Database } from '@/lib/supabase/types'
 
-// Configure VAPID — called once at module load
-webpush.setVapidDetails(
-  `mailto:${process.env.VAPID_CONTACT_EMAIL}`,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-)
+// Configure VAPID lazily — only when actually sending a notification
+let vapidConfigured = false
+function ensureVapidConfigured() {
+  if (!vapidConfigured) {
+    webpush.setVapidDetails(
+      `mailto:${process.env.VAPID_CONTACT_EMAIL}`,
+      process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+      process.env.VAPID_PRIVATE_KEY!
+    )
+    vapidConfigured = true
+  }
+}
 
 // Service-role client — bypasses RLS for server-side operations
 function getServiceClient() {
@@ -30,6 +36,7 @@ export interface PushPayload {
  * Automatically removes stale subscriptions (410 Gone responses).
  */
 export async function sendPushToUser(userId: string, payload: PushPayload): Promise<void> {
+  ensureVapidConfigured()
   const supabase = getServiceClient()
 
   // Fetch all subscriptions for this user
@@ -108,6 +115,7 @@ export async function sendPushToUser(userId: string, payload: PushPayload): Prom
  * Use sparingly — intended for broadcast announcements.
  */
 export async function sendPushBroadcast(payload: PushPayload): Promise<void> {
+  ensureVapidConfigured()
   const supabase = getServiceClient()
 
   const { data: subscriptions, error } = await supabase

@@ -25,6 +25,7 @@ export interface Database {
           avatar_url?: string | null
           created_at?: string
         }
+        Relationships: []
       }
       push_subscriptions: {
         Row: {
@@ -60,6 +61,7 @@ export interface Database {
           created_at?: string
           last_used_at?: string
         }
+        Relationships: []
       }
       notifications_log: {
         Row: {
@@ -95,6 +97,7 @@ export interface Database {
           sent_at?: string | null
           created_at?: string
         }
+        Relationships: []
       }
     }
     Views: {
