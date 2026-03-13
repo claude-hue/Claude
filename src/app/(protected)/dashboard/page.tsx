@@ -23,6 +23,8 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single()
 
+  if (profile?.is_admin) redirect('/admin')
+
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Nav */}
