@@ -88,6 +88,9 @@ export function usePushNotifications(): PushNotificationState {
 
       // Get VAPID public key
       const keyRes = await fetch('/api/vapid-public-key')
+      if (!keyRes.ok) {
+        throw new Error('VAPID public key not configured on server')
+      }
       const { publicKey } = await keyRes.json()
 
       if (!publicKey) {

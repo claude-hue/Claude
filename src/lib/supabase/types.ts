@@ -11,18 +11,21 @@ export interface Database {
           id: string
           display_name: string | null
           avatar_url: string | null
+          is_admin: boolean
           created_at: string
         }
         Insert: {
           id: string
           display_name?: string | null
           avatar_url?: string | null
+          is_admin?: boolean
           created_at?: string
         }
         Update: {
           id?: string
           display_name?: string | null
           avatar_url?: string | null
+          is_admin?: boolean
           created_at?: string
         }
         Relationships: []
