@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { useRealtimeChannel } from '@/hooks/useRealtimeChannel'
 import { NewConversationModal } from './NewConversationModal'
+import { createClient } from '@/lib/supabase/client'
 
 interface Member {
   user_id: string
@@ -75,6 +76,12 @@ export function ConversationList({ currentUserId }: { currentUserId: string }) {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
 
+  const handleLogout = useCallback(async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/login')
+  }, [router])
+
   const fetchConversations = useCallback(async () => {
     try {
       const res = await fetch('/api/conversations')
@@ -119,15 +126,26 @@ export function ConversationList({ currentUserId }: { currentUserId: string }) {
         <div className="px-4 pt-4 pb-3 border-b border-gray-100">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-xl font-bold text-gray-900">Messages</h1>
-            <button
-              onClick={() => setShowModal(true)}
-              className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
-              title="New conversation"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowModal(true)}
+                className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
+                title="New conversation"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-8 h-8 text-gray-400 rounded-full flex items-center justify-center hover:bg-gray-100 hover:text-gray-600 transition-colors"
+                title="Log out"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </button>
+            </div>
           </div>
           <input
             type="text"
