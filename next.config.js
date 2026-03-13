@@ -15,6 +15,9 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    NEXT_PUBLIC_VAPID_PUBLIC_KEY: 'BItms8oXhfTApsdU81dqMn46jg9LmIfCKAntdl3WHjFnS48me0-ZjCi8x7ZVCgUMzmEIcjnkHOd8g3juxeemgi0',
+  },
   async headers() {
     return [
       {
