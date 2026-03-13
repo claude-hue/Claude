@@ -128,10 +128,14 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
-        <Link href="/settings" className="text-gray-500 hover:text-gray-900 text-sm">
-          Settings
+        <Link href="/dashboard" className="text-gray-500 hover:text-gray-900 text-sm">
+          ← Dashboard
         </Link>
-        <h1 className="font-bold text-gray-900">Push Notifications — Admin</h1>
+        <h1 className="font-bold text-gray-900">Admin</h1>
+        <div className="ml-auto flex items-center gap-3">
+          <Link href="/messages" className="text-sm text-indigo-600 hover:underline">Messages</Link>
+          <Link href="/admin/bugs" className="text-sm text-red-600 hover:underline font-medium">Bug Reports</Link>
+        </div>
       </nav>
 
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">

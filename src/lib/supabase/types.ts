@@ -102,6 +102,141 @@ export interface Database {
         }
         Relationships: []
       }
+      conversations: {
+        Row: {
+          id: string
+          type: 'direct' | 'group'
+          name: string | null
+          description: string | null
+          avatar_url: string | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          type: 'direct' | 'group'
+          name?: string | null
+          description?: string | null
+          avatar_url?: string | null
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          type?: 'direct' | 'group'
+          name?: string | null
+          description?: string | null
+          avatar_url?: string | null
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      conversation_members: {
+        Row: {
+          id: string
+          conversation_id: string
+          user_id: string
+          role: 'member' | 'admin'
+          joined_at: string
+          last_read_at: string
+        }
+        Insert: {
+          id?: string
+          conversation_id: string
+          user_id: string
+          role?: 'member' | 'admin'
+          joined_at?: string
+          last_read_at?: string
+        }
+        Update: {
+          id?: string
+          conversation_id?: string
+          user_id?: string
+          role?: 'member' | 'admin'
+          joined_at?: string
+          last_read_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          id: string
+          conversation_id: string
+          sender_id: string | null
+          content: string | null
+          type: 'text' | 'image' | 'file' | 'system'
+          file_url: string | null
+          file_name: string | null
+          file_size: number | null
+          mime_type: string | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          conversation_id: string
+          sender_id?: string | null
+          content?: string | null
+          type?: 'text' | 'image' | 'file' | 'system'
+          file_url?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          mime_type?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          conversation_id?: string
+          sender_id?: string | null
+          content?: string | null
+          type?: 'text' | 'image' | 'file' | 'system'
+          file_url?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          mime_type?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: []
+      }
+      bug_reports: {
+        Row: {
+          id: string
+          user_id: string | null
+          title: string
+          description: string | null
+          category: 'ui' | 'crash' | 'performance' | 'messaging' | 'other'
+          status: 'open' | 'in_progress' | 'resolved'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          title: string
+          description?: string | null
+          category?: 'ui' | 'crash' | 'performance' | 'messaging' | 'other'
+          status?: 'open' | 'in_progress' | 'resolved'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          title?: string
+          description?: string | null
+          category?: 'ui' | 'crash' | 'performance' | 'messaging' | 'other'
+          status?: 'open' | 'in_progress' | 'resolved'
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

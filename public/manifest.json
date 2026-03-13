@@ -1,14 +1,17 @@
 {
-  "name": "PWA Supabase App",
-  "short_name": "PWA App",
-  "description": "Progressive Web App with Supabase and push notifications",
-  "start_url": "/",
+  "name": "Claude Messaging",
+  "short_name": "Messages",
+  "description": "Real-time messaging with file sharing and group chats",
+  "start_url": "/messages",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#ffffff",
   "theme_color": "#6366f1",
   "orientation": "portrait",
-  "scope": "/",
   "lang": "en",
+  "categories": ["social", "communication"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -27,6 +30,14 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Messages",
+      "short_name": "Chat",
+      "url": "/messages",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

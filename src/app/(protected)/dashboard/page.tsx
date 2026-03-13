@@ -23,8 +23,6 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single()
 
-  if (profile?.is_admin) redirect('/admin')
-
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Nav */}
@@ -53,6 +51,18 @@ export default async function DashboardPage() {
 
         {/* Feature cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Messages — primary feature */}
+          <Link href="/messages" className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mb-3">
+              <svg className="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-1">Messages</h3>
+            <p className="text-sm text-gray-500 mb-3">Chat, share files, and create groups.</p>
+            <span className="text-sm text-indigo-600 font-medium">Open →</span>
+          </Link>
+
           <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
             <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mb-3">
               <svg className="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,30 +76,17 @@ export default async function DashboardPage() {
             </Link>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-3">
-              <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-1">Realtime</h3>
-            <p className="text-sm text-gray-500 mb-3">Live data updates via Supabase.</p>
-            <span className="text-sm text-green-600 font-medium">Active</span>
-          </div>
-
           {profile?.is_admin && (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <Link href="/admin" className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
               <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mb-3">
                 <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-1">Admin</h3>
-              <p className="text-sm text-gray-500 mb-3">Send push notifications to users.</p>
-              <Link href="/admin" className="text-sm text-amber-600 font-medium hover:underline">
-                Open Dashboard →
-              </Link>
-            </div>
+              <p className="text-sm text-gray-500 mb-3">Push notifications and bug reports.</p>
+              <span className="text-sm text-amber-600 font-medium">Open Dashboard →</span>
+            </Link>
           )}
         </div>
       </div>

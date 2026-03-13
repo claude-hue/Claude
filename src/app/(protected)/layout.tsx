@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { BugReportButton } from '@/components/BugReportButton'
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -11,5 +12,10 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     redirect('/login')
   }
 
-  return <>{children}</>
+  return (
+    <>
+      {children}
+      <BugReportButton />
+    </>
+  )
 }
