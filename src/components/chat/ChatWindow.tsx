@@ -79,7 +79,7 @@ export function ChatWindow({ conversationId, currentUserId }: Props) {
     filter: `conversation_id=eq.${conversationId}`,
     onData: (payload) => {
       if (payload.eventType !== 'INSERT') return
-      const raw = payload.new as Message
+      const raw = payload.new as unknown as Message
       // Resolve sender info from already-loaded conversation members (avoids an extra fetch)
       const member = conversation?.members.find(m => m.user_id === raw.sender_id)
       const enriched: Message = {

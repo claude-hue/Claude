@@ -52,7 +52,8 @@ export async function GET() {
     .order('created_at', { ascending: false })
     .limit(convIds.length * 5)
 
-  const lastMessageMap = new Map<string, typeof recentMessages extends Array<infer T> ? T : never>()
+  type RecentMessage = { id: string; conversation_id: string; content: string | null; type: string; sender_id: string | null; created_at: string }
+  const lastMessageMap = new Map<string, RecentMessage>()
   for (const msg of recentMessages ?? []) {
     if (!lastMessageMap.has(msg.conversation_id)) {
       lastMessageMap.set(msg.conversation_id, msg)
