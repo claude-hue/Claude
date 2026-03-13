@@ -77,16 +77,22 @@ export function ChatWindow({ conversationId, currentUserId }: Props) {
     table: 'messages',
     event: 'INSERT',
     filter: `conversation_id=eq.${conversationId}`,
-    onData: async (payload) => {
+    onData: (payload) => {
       if (payload.eventType !== 'INSERT') return
-      const newMsg = payload.new as Message & { sender_display_name?: string; sender_avatar_url?: string }
-      // If message already exists (optimistic), skip
+      const raw = payload.new as Message
+      // Resolve sender info from already-loaded conversation members (avoids an extra fetch)
+      const member = conversation?.members.find(m => m.user_id === raw.sender_id)
+      const enriched: Message = {
+        ...raw,
+        sender_display_name: member?.display_name ?? null,
+        sender_avatar_url: member?.avatar_url ?? null,
+        deleted_at: raw.deleted_at ?? null,
+      }
       setMessages(prev => {
-        if (prev.find(m => m.id === newMsg.id)) return prev
-        return [...prev, { ...newMsg, sender_display_name: newMsg.sender_display_name ?? null, sender_avatar_url: newMsg.sender_avatar_url ?? null }]
+        if (prev.find(m => m.id === enriched.id)) return prev
+        return [...prev, enriched]
       })
-      // Scroll to bottom if near bottom
-      if (isAtBottomRef.current || newMsg.sender_id === currentUserId) {
+      if (isAtBottomRef.current || raw.sender_id === currentUserId) {
         setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50)
       }
     },
